@@ -1,0 +1,19 @@
+name: lyescript-github-actions
+on: [push]
+jobs:
+  check-lumen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - name: init bit.dev
+        run: |
+          echo "Adding bit.dev to npm registry"
+          npm config set @bit:registry https://node.bit.dev
+          npm config set //node.bit.dev/:_authToken ${BIT_TOKEN}
+          echo "Completed adding bit.dev to npm registry"
+        env:
+          BIT_TOKEN: ${{ secrets.BIT_TOKEN }}
+      - run: npm install -g lumen-language
+      - run: lumen-language -e "(print 'lua)"
+      - run: lumen-node -e "(print 'js)"
